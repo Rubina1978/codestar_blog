@@ -90,6 +90,9 @@ DATABASES = {
     dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
+CSRF_TRUSTED_ORIGINS = ["https://*.codeinstitute-ide.net/",  #list of trusted origins for requests
+                        "https://*.herokuapp.com"]
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Password validation
