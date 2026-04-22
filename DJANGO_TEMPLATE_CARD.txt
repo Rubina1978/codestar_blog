@@ -1,0 +1,61 @@
+DJANGO TEMPLATE QUICK CARD
+
+Use this when writing templates:
+
+1) Print data
+{{ variable }}
+Example: {{ post.title }}
+
+2) Template actions / logic
+{% ... %}
+Use for:
+- {% extends "base.html" %}
+- {% block content %} ... {% endblock %}
+- {% if condition %} ... {% endif %}
+- {% for item in list %} ... {% endfor %}
+- {% url "name" arg %}
+- {% csrf_token %}
+- {% load static %}
+- {% static "path/file.css" %}
+
+3) Template comments (not shown in browser)
+{# this is a comment #}
+
+----------------------------------------
+WHERE EACH ONE GOES
+
+Top of child template:
+{% extends "base.html" %}
+{% load static %}
+
+Main page content:
+{% block content %}
+  <h1>{{ title }}</h1>
+  {% for post in post_list %}
+    <h2>{{ post.title }}</h2>
+  {% endfor %}
+{% endblock %}
+
+In forms:
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+</form>
+
+----------------------------------------
+MENTAL RULE
+
+{{ }}  = SHOW something
+{% %}  = DO something
+{# #}  = NOTE something
+
+----------------------------------------
+TROUBLESHOOT CHECKLIST
+
+- Did I forget {% endfor %}, {% endif %}, or {% endblock %}?
+- Did I spell the variable name exactly as in views.py?
+- Did I add {% load static %} before using {% static ... %}?
+- Did I put quotes around template names and url names?
+- Did I run the server and refresh after saving?
+
+You do not need to memorize everything. Use patterns, copy, adapt, repeat.
