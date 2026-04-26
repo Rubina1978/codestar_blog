@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='post',
-            name='exerpt',
+            name='excerpt',
             field=models.TextField(blank=True),
         ),
     ]

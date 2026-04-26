@@ -12,11 +12,9 @@ class Post(models.Model):
     content = models.TextField()  # blog article content
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)  # default is defined as zero, published as one
-    exerpt = models.TextField(blank=True)
+    excerpt = models.TextField(blank=True)
     updated_on = models.DateTimeField(auto_now=True)
    
-    
-
     class Meta:
         ordering = ["-created_on"]
 
