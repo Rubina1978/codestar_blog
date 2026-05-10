@@ -10,9 +10,26 @@ from .forms import CommentForm
 
 
 class PostList(generic.ListView):
+
+    """
+    Returns all published posts in :model:blog.Post`
+    and display them in a page of six post.
+
+    ""Context""
+
+    ``Queryset``
+        All published instances of  :models:`blog.Post`
+    ``paginated_by``
+        Number of posts per page
+
+    ""Templates""
+
+    :template:`blog/index.html`
+    """
     queryset = Post.objects.filter(status=1)
     template_name = "blog/index.html"
     paginate_by = 6
+
 
 def post_detail(request, slug):
     """Display an individual :model:`blog.post`.
@@ -23,17 +40,24 @@ def post_detail(request, slug):
 
         An instance of :model: `blog.Post`.
 
+        ``comments``
+            All approved comments related to the post
+
+        ``comment_count``
+
+        A count of approved comments related to the post
+
+        ``comment_form``
+            An instance of :form:`blog.CommentForm`
         **Template:**
-        
+
         :template:`blog/post_detail.html`
         """
     queryset = Post.objects.filter(status=1)
     post = get_object_or_404(queryset, slug=slug)
     comments = post.comments.all().order_by("-created_on")
     comment_count = comments.filter(approved=True).count()
-
     if request.method == "POST":  
-        
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
@@ -48,8 +72,6 @@ def post_detail(request, slug):
     comment_form = CommentForm()
 
     # comment edit function
-
-
     return render(
         request,
         "blog/post_detail.html",
@@ -64,7 +86,18 @@ def post_detail(request, slug):
 
 def comment_edit(request, slug, comment_id):
     """
-    view to edit comments
+    display an individual comment for edit
+
+     **Context**
+
+    ``post``
+        An instance of :model:`blog.Post`.
+
+    ``comment``
+        A single comment related to the post.
+        
+    ``comment_form``
+        An instance of :form:`blog.CommentForm`
     """
     if request.method == "POST":
 
@@ -85,20 +118,31 @@ def comment_edit(request, slug, comment_id):
 
     return HttpResponseRedirect(reverse('post_detail', args=[slug]))
 
+
 def comment_delete(request, slug, comment_id):
+    
     """
-    view to delete comment
+    Delete an individual comment.
+
+    **Context**
+
+    ``post``
+        An instance of :model:`blog.Post`.
+
+    ``comment``
+        A single comment related to the post.
     """
+    
     queryset = Post.objects.filter(status=1)
     post = get_object_or_404(queryset, slug=slug)
     comment = get_object_or_404(Comment, pk=comment_id)
 
     if comment.author == request.user:
         comment.delete()
-        messages.add_message(request, messages.SUCCESS, 'Comment deleted!')
+        messages.add_message(request, messages.SUCCESS, 
+            'Comment deleted!')
     else:
-        messages.add_message(request, messages.ERROR, 'You can only delete your own comments!')
+        messages.add_message(request, messages.ERROR,
+            'You can only delete your own comments!')
 
     return HttpResponseRedirect(reverse('post_detail', args=[slug]))
-                
-            
